@@ -23,7 +23,7 @@ from .locale import get_default_locale_callable
 
 
 GRAPH_API_VERSION = getattr(settings, 'SOCIALACCOUNT_PROVIDERS', {}).get(
-    'facebook', {}).get('VERSION', 'v2.4')
+    'facebook', {}).get('VERSION', 'v2.5')
 GRAPH_API_URL = 'https://graph.facebook.com/' + GRAPH_API_VERSION
 
 NONCE_SESSION_KEY = 'allauth_facebook_nonce'
@@ -116,6 +116,15 @@ class FacebookProvider(OAuth2Provider):
             ret['auth_type'] = 'reauthenticate'
         return ret
 
+    def get_init_params(self, request, app):
+        init_params = {
+            'appId': app.client_id,
+            'version': GRAPH_API_VERSION
+        }
+        settings = self.get_settings()
+        init_params.update(settings.get('INIT_PARAMS', {}))
+        return init_params
+
     def get_fb_login_options(self, request):
         ret = self.get_auth_params(request, 'authenticate')
         ret['scope'] = ','.join(self.get_scope(request))
@@ -142,6 +151,7 @@ class FacebookProvider(OAuth2Provider):
             "appId": app.client_id,
             "version": GRAPH_API_VERSION,
             "locale": locale,
+            "initParams": self.get_init_params(request, app),
             "loginOptions": self.get_fb_login_options(request),
             "loginByTokenUrl": abs_uri('facebook_login_by_token'),
             "cancelUrl": abs_uri('socialaccount_login_cancelled'),

@@ -102,10 +102,11 @@ def generate_unique_username(txts, regex=None):
     adapter = get_adapter()
     basename = _generate_unique_username_base(txts, regex)
     candidates = generate_username_candidates(basename)
-    existing_users = filter_users_by_username(*candidates).values_list(
+    existing_usernames = filter_users_by_username(*candidates).values_list(
         USER_MODEL_USERNAME_FIELD, flat=True)
+    existing_usernames = set([n.lower() for n in existing_usernames])
     for candidate in candidates:
-        if candidate not in existing_users:
+        if candidate.lower() not in existing_usernames:
             try:
                 return adapter.clean_username(candidate, shallow=True)
             except ValidationError:
@@ -230,11 +231,28 @@ def deserialize_instance(model, data):
     return ret
 
 
-def set_form_field_order(form, fields_order):
-    assert isinstance(form.fields, OrderedDict)
-    form.fields = OrderedDict(
-        (f, form.fields[f])
-        for f in fields_order)
+def set_form_field_order(form, field_order):
+    """
+    This function is a verbatim copy of django.forms.Form.order_fields() to
+    support field ordering below Django 1.9.
+
+    field_order is a list of field names specifying the order. Append fields
+    not included in the list in the default order for backward compatibility
+    with subclasses not overriding field_order. If field_order is None, keep
+    all fields in the order defined in the class. Ignore unknown fields in
+    field_order to allow disabling fields in form subclasses without
+    redefining ordering.
+    """
+    if field_order is None:
+        return
+    fields = OrderedDict()
+    for key in field_order:
+        try:
+            fields[key] = form.fields.pop(key)
+        except KeyError:  # ignore unknown fields
+            pass
+    fields.update(form.fields)  # add remaining fields in original order
+    form.fields = fields
 
 
 def build_absolute_uri(request, location, protocol=None):
