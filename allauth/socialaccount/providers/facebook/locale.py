@@ -4,6 +4,7 @@
 import os
 
 from django.utils.translation import get_language, to_locale
+import defusedxml.minidom
 
 
 def _build_locale_table(filename_or_file):
@@ -12,10 +13,8 @@ def _build_locale_table(filename_or_file):
     available language ('en, 'es, 'zh', ...) with a list of available regions
     for that language ('en' -> 'US', 'EN') and an (arbitrary) default region.
     """
-    # Require the XML parser module only if we want the default mapping
-    from xml.dom.minidom import parse
 
-    dom = parse(filename_or_file)
+    dom = defusedxml.minidom.parse(filename_or_file)
 
     reps = dom.getElementsByTagName('representation')
     locs = map(lambda r: r.childNodes[0].data, reps)
