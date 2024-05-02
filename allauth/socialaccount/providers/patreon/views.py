@@ -22,7 +22,7 @@ class PatreonOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         resp = requests.get(self.profile_url,
-                            headers={'Authorization': 'Bearer ' + token.token})
+                            headers={'Authorization': 'Bearer ' + token.token}, timeout=60)
         extra_data = resp.json().get('data')
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

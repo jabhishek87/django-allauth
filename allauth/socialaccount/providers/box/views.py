@@ -19,7 +19,7 @@ class BoxOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         extra_data = requests.get(self.profile_url, params={
             'access_token': token.token
-        })
+        }, timeout=60)
 
         # This only here because of weird response from the test suite
         if isinstance(extra_data, list):

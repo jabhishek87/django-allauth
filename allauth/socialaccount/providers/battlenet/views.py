@@ -106,7 +106,7 @@ class BattleNetOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         params = {"access_token": token.token}
-        response = requests.get(self.profile_url, params=params)
+        response = requests.get(self.profile_url, params=params, timeout=60)
         data = _check_errors(response)
 
         # Add the region to the data so that we can have it in `extra_data`.

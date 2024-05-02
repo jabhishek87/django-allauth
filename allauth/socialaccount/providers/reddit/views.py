@@ -26,7 +26,7 @@ class RedditAdapter(OAuth2Adapter):
         headers = {
             "Authorization": "bearer " + token.token}
         headers.update(self.headers)
-        extra_data = requests.get(self.profile_url, headers=headers)
+        extra_data = requests.get(self.profile_url, headers=headers, timeout=60)
 
         # This only here because of weird response from the test suite
         if isinstance(extra_data, list):

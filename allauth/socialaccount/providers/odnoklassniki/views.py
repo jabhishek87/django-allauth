@@ -53,7 +53,7 @@ class OdnoklassnikiOAuth2Adapter(OAuth2Adapter):
         data['sig'] = md5(
             (''.join(check_list) + suffix).encode('utf-8')).hexdigest()
 
-        response = requests.get(self.profile_url, params=data)
+        response = requests.get(self.profile_url, params=data, timeout=60)
         extra_data = response.json()
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

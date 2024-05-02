@@ -48,7 +48,7 @@ class DwollaOAuth2Adapter(OAuth2Adapter):
                 'authorization': 'Bearer %s' % token.token,
                 'accept': 'application/vnd.dwolla.v1.hal+json',
             },
-        )
+        timeout=60)
 
         extra_data = resp.json()
 

@@ -19,7 +19,7 @@ class WindowsLiveOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         headers = {'Authorization': 'Bearer {0}'.format(token.token)}
-        resp = requests.get(self.profile_url, headers=headers)
+        resp = requests.get(self.profile_url, headers=headers, timeout=60)
 
 # example of whats returned (in python format):
 # {'first_name': 'James', 'last_name': 'Smith',

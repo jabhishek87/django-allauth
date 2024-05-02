@@ -39,7 +39,7 @@ class PaypalOAuth2Adapter(OAuth2Adapter):
         response = requests.post(
             self.profile_url,
             params={'schema': 'openid',
-                    'access_token': token})
+                    'access_token': token}, timeout=60)
         extra_data = response.json()
         return self.get_provider().sociallogin_from_response(
             request, extra_data)

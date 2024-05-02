@@ -20,7 +20,7 @@ class HubicOAuth2Adapter(OAuth2Adapter):
         token_type = kwargs['response']['token_type']
         resp = requests.get(
             self.profile_url,
-            headers={'Authorization': '%s %s' % (token_type, token.token)})
+            headers={'Authorization': '%s %s' % (token_type, token.token)}, timeout=60)
         extra_data = resp.json()
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

@@ -29,7 +29,7 @@ class WeixinOAuth2Adapter(OAuth2Adapter):
         openid = kwargs.get('response', {}).get('openid')
         resp = requests.get(self.profile_url,
                             params={'access_token': token.token,
-                                    'openid': openid})
+                                    'openid': openid}, timeout=60)
         extra_data = resp.json()
         nickname = extra_data.get('nickname')
         if nickname:

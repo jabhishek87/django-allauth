@@ -26,8 +26,8 @@ class SlackOAuth2Adapter(OAuth2Adapter):
         # Verify the user first
         resp = requests.get(
             self.identity_url,
-            params={'token': token}
-        )
+            params={'token': token}, 
+        timeout=60)
         resp = resp.json()
 
         if not resp.get('ok'):

@@ -22,7 +22,7 @@ class EventbriteOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         """Complete login."""
-        resp = requests.get(self.profile_url, params={'token': token.token})
+        resp = requests.get(self.profile_url, params={'token': token.token}, timeout=60)
         extra_data = resp.json()
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

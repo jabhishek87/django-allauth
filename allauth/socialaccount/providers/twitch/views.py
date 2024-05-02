@@ -18,7 +18,7 @@ class TwitchOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         params = {"oauth_token": token.token, "client_id": app.client_id}
-        response = requests.get(self.profile_url, params=params)
+        response = requests.get(self.profile_url, params=params, timeout=60)
 
         data = response.json()
         if response.status_code >= 400:

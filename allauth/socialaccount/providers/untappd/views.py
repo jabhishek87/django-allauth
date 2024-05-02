@@ -20,7 +20,7 @@ class UntappdOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         resp = requests.get(self.user_info_url,
-                            params={'access_token': token.token})
+                            params={'access_token': token.token}, timeout=60)
         extra_data = resp.json()
         # TODO: get and store the email from the user info json
         return self.get_provider().sociallogin_from_response(request,

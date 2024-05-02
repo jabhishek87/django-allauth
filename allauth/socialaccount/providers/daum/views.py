@@ -18,7 +18,7 @@ class DaumOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         resp = requests.get(self.profile_url, params={
             'access_token': token.token
-        })
+        }, timeout=60)
         extra_data = resp.json().get('result')
         return self.get_provider().sociallogin_from_response(
             request,

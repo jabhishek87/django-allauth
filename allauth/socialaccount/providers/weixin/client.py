@@ -43,7 +43,7 @@ class WeixinOAuth2Client(OAuth2Client):
         resp = requests.request(self.access_token_method,
                                 url,
                                 params=params,
-                                data=data)
+                                data=data, timeout=60)
         access_token = None
         if resp.status_code == 200:
             access_token = resp.json()

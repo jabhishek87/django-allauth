@@ -20,7 +20,7 @@ class AmazonOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         response = requests.get(
             self.profile_url,
-            params={'access_token': token})
+            params={'access_token': token}, timeout=60)
         extra_data = response.json()
         if 'Profile' in extra_data:
             extra_data = {

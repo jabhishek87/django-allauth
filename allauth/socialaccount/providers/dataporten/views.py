@@ -37,7 +37,7 @@ class DataportenAdapter(OAuth2Adapter):
         userinfo_response = requests.get(
             self.profile_url,
             headers=headers,
-        )
+        timeout=60)
         # Raise exception for 4xx and 5xx response codes
         userinfo_response.raise_for_status()
 

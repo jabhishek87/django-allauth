@@ -21,7 +21,7 @@ class StackExchangeOAuth2Adapter(OAuth2Adapter):
         resp = requests.get(self.profile_url,
                             params={'access_token': token.token,
                                     'key': app.key,
-                                    'site': site})
+                                    'site': site}, timeout=60)
         extra_data = resp.json()['items'][0]
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

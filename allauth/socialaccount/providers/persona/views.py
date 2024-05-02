@@ -24,7 +24,7 @@ def persona_login(request):
 
     resp = requests.post('https://verifier.login.persona.org/verify',
                          {'assertion': assertion,
-                          'audience': audience})
+                          'audience': audience}, timeout=60)
     try:
         resp.raise_for_status()
         extra_data = resp.json()

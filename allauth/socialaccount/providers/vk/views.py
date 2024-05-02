@@ -48,7 +48,7 @@ class VKOAuth2Adapter(OAuth2Adapter):
         if uid:
             params['user_ids'] = uid
         resp = requests.get(self.profile_url,
-                            params=params)
+                            params=params, timeout=60)
         resp.raise_for_status()
         extra_data = resp.json()['response'][0]
         email = kwargs['response'].get('email')

@@ -19,7 +19,7 @@ class DiscordOAuth2Adapter(OAuth2Adapter):
             'Authorization': 'Bearer {0}'.format(token.token),
             'Content-Type': 'application/json',
         }
-        extra_data = requests.get(self.profile_url, headers=headers)
+        extra_data = requests.get(self.profile_url, headers=headers, timeout=60)
 
         return self.get_provider().sociallogin_from_response(
             request,

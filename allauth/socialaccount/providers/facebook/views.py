@@ -45,7 +45,7 @@ def fb_complete_login(request, app, token):
             'fields': ','.join(provider.get_fields()),
             'access_token': token.token,
             'appsecret_proof': compute_appsecret_proof(app, token)
-        })
+        }, timeout=60)
     resp.raise_for_status()
     extra_data = resp.json()
     login = provider.sociallogin_from_response(request, extra_data)
@@ -89,7 +89,7 @@ def login_by_token(request):
                     info = requests.get(
                         GRAPH_API_URL + '/oauth/access_token_info',
                         params={'client_id': app.client_id,
-                                'access_token': access_token}).json()
+                                'access_token': access_token}, timeout=60).json()
                     nonce = provider.get_nonce(request, pop=True)
                     ok = nonce and nonce == info.get('auth_nonce')
                 else:
@@ -100,7 +100,7 @@ def login_by_token(request):
                         params={'grant_type': 'fb_exchange_token',
                                 'client_id': app.client_id,
                                 'client_secret': app.secret,
-                                'fb_exchange_token': access_token}).json()
+                                'fb_exchange_token': access_token}, timeout=60).json()
                     access_token = resp['access_token']
                     expires_in = resp.get('expires_in')
                     if expires_in:

@@ -70,7 +70,7 @@ class OAuth2Client(object):
             params=params,
             data=data,
             headers=self.headers,
-            auth=auth)
+            auth=auth, timeout=60)
 
         access_token = None
         if resp.status_code == 200:

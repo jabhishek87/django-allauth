@@ -24,7 +24,7 @@ class Auth0OAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, response):
         extra_data = requests.get(self.profile_url, params={
             'access_token': token.token
-        }).json()
+        }, timeout=60).json()
         extra_data = {
             'user_id': extra_data['user_id'],
             'id': extra_data['user_id'],

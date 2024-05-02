@@ -18,7 +18,7 @@ class SpotifyOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         extra_data = requests.get(self.profile_url, params={
             'access_token': token.token
-        })
+        }, timeout=60)
 
         return self.get_provider().sociallogin_from_response(
             request,

@@ -26,7 +26,7 @@ class CoinbaseOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         response = requests.get(self.profile_url,
-                                params={'access_token': token})
+                                params={'access_token': token}, timeout=60)
         extra_data = response.json()['users'][0]['user']
         return self.get_provider().sociallogin_from_response(
             request, extra_data)

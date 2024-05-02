@@ -72,7 +72,7 @@ class OAuthClient(object):
             rt_url = self.request_token_url + '?' + urlencode(get_params)
             oauth = OAuth1(self.consumer_key,
                            client_secret=self.consumer_secret)
-            response = requests.post(url=rt_url, auth=oauth)
+            response = requests.post(url=rt_url, auth=oauth, timeout=60)
             if response.status_code not in [200, 201]:
                 raise OAuthError(
                     _('Invalid response while obtaining request token'
@@ -103,7 +103,7 @@ class OAuthClient(object):
             if oauth_verifier:
                 at_url = at_url + '?' + urlencode(
                     {'oauth_verifier': oauth_verifier})
-            response = requests.post(url=at_url, auth=oauth)
+            response = requests.post(url=at_url, auth=oauth, timeout=60)
             if response.status_code not in [200, 201]:
                 raise OAuthError(
                     _('Invalid response while obtaining access token'

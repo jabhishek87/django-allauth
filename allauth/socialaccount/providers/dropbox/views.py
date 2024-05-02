@@ -19,7 +19,7 @@ class DropboxOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         extra_data = requests.post(self.profile_url, headers={
             'Authorization': 'Bearer %s' % (token.token, )
-        })
+        }, timeout=60)
 
         # This only here because of weird response from the test suite
         if isinstance(extra_data, list):
