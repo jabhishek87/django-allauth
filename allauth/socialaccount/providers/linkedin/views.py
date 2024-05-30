@@ -1,4 +1,3 @@
-from xml.etree import ElementTree
 from xml.parsers.expat import ExpatError
 
 from django.utils import six
@@ -12,6 +11,7 @@ from allauth.socialaccount.providers.oauth.views import (
 )
 
 from .provider import LinkedInProvider
+import defusedxml.ElementTree
 
 
 class LinkedInAPI(OAuth):
@@ -26,7 +26,7 @@ class LinkedInAPI(OAuth):
         if not six.PY3:
             raw_xml = raw_xml.encode('utf8')
         try:
-            return self.to_dict(ElementTree.fromstring(raw_xml))
+            return self.to_dict(defusedxml.ElementTree.fromstring(raw_xml))
         except (ExpatError, KeyError, IndexError):
             return None
 
