@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import StripeProvider
+from security import safe_requests
 
 
 class StripeOAuth2Adapter(OAuth2Adapter):
@@ -17,7 +17,7 @@ class StripeOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, response, **kwargs):
         headers = {'Authorization': 'Bearer {0}'.format(token.token)}
-        resp = requests.get(self.profile_url % response.get('stripe_user_id'),
+        resp = safe_requests.get(self.profile_url % response.get('stripe_user_id'),
                             headers=headers)
         extra_data = resp.json()
         return self.get_provider().sociallogin_from_response(request,

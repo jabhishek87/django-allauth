@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import BoxOAuth2Provider
+from security import safe_requests
 
 
 class BoxOAuth2Adapter(OAuth2Adapter):
@@ -17,7 +17,7 @@ class BoxOAuth2Adapter(OAuth2Adapter):
     redirect_uri_protocol = None
 
     def complete_login(self, request, app, token, **kwargs):
-        extra_data = requests.get(self.profile_url, params={
+        extra_data = safe_requests.get(self.profile_url, params={
             'access_token': token.token
         })
 

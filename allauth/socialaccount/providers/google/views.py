@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import GoogleProvider
+from security import safe_requests
 
 
 class GoogleOAuth2Adapter(OAuth2Adapter):
@@ -16,7 +16,7 @@ class GoogleOAuth2Adapter(OAuth2Adapter):
     profile_url = 'https://www.googleapis.com/oauth2/v1/userinfo'
 
     def complete_login(self, request, app, token, **kwargs):
-        resp = requests.get(self.profile_url,
+        resp = safe_requests.get(self.profile_url,
                             params={'access_token': token.token,
                                     'alt': 'json'})
         resp.raise_for_status()

@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import RobinhoodProvider
+from security import safe_requests
 
 
 class RobinhoodOAuth2Adapter(OAuth2Adapter):
@@ -25,8 +25,7 @@ class RobinhoodOAuth2Adapter(OAuth2Adapter):
         return 'https://api.robinhood.com/user/id/'
 
     def complete_login(self, request, app, token, **kwargs):
-        response = requests.get(
-            self.profile_url,
+        response = safe_requests.get(self.profile_url,
             headers={'Authorization': 'Bearer %s' % token.token})
         extra_data = response.json()
         return self.get_provider().sociallogin_from_response(

@@ -15,6 +15,7 @@ from allauth.socialaccount.models import SocialLogin, SocialToken
 
 from ..base import AuthError
 from .provider import DraugiemProvider
+from security import safe_requests
 
 
 class DraugiemApiError(Exception):
@@ -76,7 +77,7 @@ def callback(request):
 
 def draugiem_complete_login(request, app, code):
     provider = providers.registry.by_id(DraugiemProvider.id, request)
-    response = requests.get(ACCESS_TOKEN_URL, {
+    response = safe_requests.get(ACCESS_TOKEN_URL, {
         'action': 'authorize',
         'app': app.secret,
         'code': code

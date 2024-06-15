@@ -20,6 +20,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 
 from .forms import FacebookConnectForm
 from .provider import GRAPH_API_URL, GRAPH_API_VERSION, FacebookProvider
+from security import safe_requests
 
 
 logger = logging.getLogger(__name__)
@@ -39,8 +40,7 @@ def compute_appsecret_proof(app, token):
 
 def fb_complete_login(request, app, token):
     provider = providers.registry.by_id(FacebookProvider.id, request)
-    resp = requests.get(
-        GRAPH_API_URL + '/me',
+    resp = safe_requests.get(GRAPH_API_URL + '/me',
         params={
             'fields': ','.join(provider.get_fields()),
             'access_token': token.token,
@@ -86,8 +86,7 @@ def login_by_token(request):
                 access_token = form.cleaned_data['access_token']
                 expires_at = None
                 if login_options.get('auth_type') == 'reauthenticate':
-                    info = requests.get(
-                        GRAPH_API_URL + '/oauth/access_token_info',
+                    info = safe_requests.get(GRAPH_API_URL + '/oauth/access_token_info',
                         params={'client_id': app.client_id,
                                 'access_token': access_token}).json()
                     nonce = provider.get_nonce(request, pop=True)
@@ -95,8 +94,7 @@ def login_by_token(request):
                 else:
                     ok = True
                 if ok and provider.get_settings().get('EXCHANGE_TOKEN'):
-                    resp = requests.get(
-                        GRAPH_API_URL + '/oauth/access_token',
+                    resp = safe_requests.get(GRAPH_API_URL + '/oauth/access_token',
                         params={'grant_type': 'fb_exchange_token',
                                 'client_id': app.client_id,
                                 'client_secret': app.secret,

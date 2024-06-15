@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import DaumProvider
+from security import safe_requests
 
 
 class DaumOAuth2Adapter(OAuth2Adapter):
@@ -16,7 +16,7 @@ class DaumOAuth2Adapter(OAuth2Adapter):
     profile_url = 'https://apis.daum.net/user/v1/show.json'
 
     def complete_login(self, request, app, token, **kwargs):
-        resp = requests.get(self.profile_url, params={
+        resp = safe_requests.get(self.profile_url, params={
             'access_token': token.token
         })
         extra_data = resp.json().get('result')

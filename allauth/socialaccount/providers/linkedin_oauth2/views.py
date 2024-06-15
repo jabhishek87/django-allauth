@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import LinkedInOAuth2Provider
+from security import safe_requests
 
 
 class LinkedInOAuth2Adapter(OAuth2Adapter):
@@ -26,7 +26,7 @@ class LinkedInOAuth2Adapter(OAuth2Adapter):
     def get_user_info(self, token):
         fields = self.get_provider().get_profile_fields()
         url = self.profile_url + ':(%s)?format=json' % ','.join(fields)
-        resp = requests.get(url, params={'oauth2_access_token': token.token})
+        resp = safe_requests.get(url, params={'oauth2_access_token': token.token})
         return resp.json()
 
 

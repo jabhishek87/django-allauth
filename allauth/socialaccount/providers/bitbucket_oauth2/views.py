@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import BitbucketOAuth2Provider
+from security import safe_requests
 
 
 class BitbucketOAuth2Adapter(OAuth2Adapter):
@@ -18,7 +18,7 @@ class BitbucketOAuth2Adapter(OAuth2Adapter):
     emails_url = 'https://api.bitbucket.org/2.0/user/emails'
 
     def complete_login(self, request, app, token, **kwargs):
-        resp = requests.get(self.profile_url,
+        resp = safe_requests.get(self.profile_url,
                             params={'access_token': token.token})
         extra_data = resp.json()
         if app_settings.QUERY_EMAIL and not extra_data.get('email'):
@@ -28,7 +28,7 @@ class BitbucketOAuth2Adapter(OAuth2Adapter):
 
     def get_email(self, token):
         """Fetches email address from email API endpoint"""
-        resp = requests.get(self.emails_url,
+        resp = safe_requests.get(self.emails_url,
                             params={'access_token': token.token})
         emails = resp.json().get('values', [])
         email = ''

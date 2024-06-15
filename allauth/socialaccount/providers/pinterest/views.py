@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import PinterestProvider
+from security import safe_requests
 
 
 class PinterestOAuth2Adapter(OAuth2Adapter):
@@ -32,7 +32,7 @@ class PinterestOAuth2Adapter(OAuth2Adapter):
     )
 
     def complete_login(self, request, app, token, **kwargs):
-        response = requests.get(self.profile_url,
+        response = safe_requests.get(self.profile_url,
                                 params={'access_token': token.token})
         extra_data = response.json()
         return self.get_provider().sociallogin_from_response(

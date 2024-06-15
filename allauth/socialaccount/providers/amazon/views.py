@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import AmazonProvider
+from security import safe_requests
 
 
 class AmazonOAuth2Adapter(OAuth2Adapter):
@@ -18,8 +18,7 @@ class AmazonOAuth2Adapter(OAuth2Adapter):
     redirect_uri_protocol = 'https'
 
     def complete_login(self, request, app, token, **kwargs):
-        response = requests.get(
-            self.profile_url,
+        response = safe_requests.get(self.profile_url,
             params={'access_token': token})
         extra_data = response.json()
         if 'Profile' in extra_data:

@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.base import ProviderException
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import DataportenProvider
+from security import safe_requests
 
 
 class DataportenAdapter(OAuth2Adapter):
@@ -34,8 +34,7 @@ class DataportenAdapter(OAuth2Adapter):
 
         # Userinfo endpoint, for documentation see:
         # https://docs.dataporten.no/docs/oauth-authentication/
-        userinfo_response = requests.get(
-            self.profile_url,
+        userinfo_response = safe_requests.get(self.profile_url,
             headers=headers,
         )
         # Raise exception for 4xx and 5xx response codes

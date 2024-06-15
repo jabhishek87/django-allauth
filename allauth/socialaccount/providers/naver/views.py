@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import NaverProvider
+from security import safe_requests
 
 
 class NaverOAuth2Adapter(OAuth2Adapter):
@@ -17,7 +17,7 @@ class NaverOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         headers = {'Authorization': 'Bearer {0}'.format(token.token)}
-        resp = requests.get(self.profile_url, headers=headers)
+        resp = safe_requests.get(self.profile_url, headers=headers)
         extra_data = resp.json().get('response')
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

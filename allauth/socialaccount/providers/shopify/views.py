@@ -1,5 +1,4 @@
 import re
-import requests
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseBadRequest
@@ -12,6 +11,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import ShopifyProvider
+from security import safe_requests
 
 
 class ShopifyOAuth2Adapter(OAuth2Adapter):
@@ -50,8 +50,7 @@ class ShopifyOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         headers = {
             'X-Shopify-Access-Token': '{token}'.format(token=token.token)}
-        response = requests.get(
-            self.profile_url,
+        response = safe_requests.get(self.profile_url,
             headers=headers)
         extra_data = response.json()
         associated_user = kwargs['response'].get('associated_user')

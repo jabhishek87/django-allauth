@@ -1,4 +1,3 @@
-import requests
 
 from django.utils.translation import ugettext as _
 
@@ -10,6 +9,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 
 from ..base import ProviderException
 from .provider import DoubanProvider
+from security import safe_requests
 
 
 class DoubanOAuth2Adapter(OAuth2Adapter):
@@ -20,7 +20,7 @@ class DoubanOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         headers = {'Authorization': 'Bearer %s' % token.token}
-        resp = requests.get(self.profile_url, headers=headers)
+        resp = safe_requests.get(self.profile_url, headers=headers)
         extra_data = resp.json()
         """
         Douban may return data like this:

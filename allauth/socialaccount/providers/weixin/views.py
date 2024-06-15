@@ -1,4 +1,3 @@
-import requests
 
 from allauth.account import app_settings
 from allauth.compat import reverse
@@ -11,6 +10,7 @@ from allauth.utils import build_absolute_uri
 
 from .client import WeixinOAuth2Client
 from .provider import WeixinProvider
+from security import safe_requests
 
 
 class WeixinOAuth2Adapter(OAuth2Adapter):
@@ -27,7 +27,7 @@ class WeixinOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         openid = kwargs.get('response', {}).get('openid')
-        resp = requests.get(self.profile_url,
+        resp = safe_requests.get(self.profile_url,
                             params={'access_token': token.token,
                                     'openid': openid})
         extra_data = resp.json()

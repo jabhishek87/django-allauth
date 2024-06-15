@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.github.provider import GitHubProvider
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
     OAuth2CallbackView,
     OAuth2LoginView,
 )
+from security import safe_requests
 
 
 class GitHubOAuth2Adapter(OAuth2Adapter):
@@ -27,7 +27,7 @@ class GitHubOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         params = {'access_token': token.token}
-        resp = requests.get(self.profile_url, params=params)
+        resp = safe_requests.get(self.profile_url, params=params)
         extra_data = resp.json()
         if app_settings.QUERY_EMAIL and not extra_data.get('email'):
             extra_data['email'] = self.get_email(token)
@@ -38,7 +38,7 @@ class GitHubOAuth2Adapter(OAuth2Adapter):
     def get_email(self, token):
         email = None
         params = {'access_token': token.token}
-        resp = requests.get(self.emails_url, params=params)
+        resp = safe_requests.get(self.emails_url, params=params)
         emails = resp.json()
         if resp.status_code == 200 and emails:
             email = emails[0]

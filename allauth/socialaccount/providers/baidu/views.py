@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import BaiduProvider
+from security import safe_requests
 
 
 class BaiduOAuth2Adapter(OAuth2Adapter):
@@ -16,7 +16,7 @@ class BaiduOAuth2Adapter(OAuth2Adapter):
     profile_url = 'https://openapi.baidu.com/rest/2.0/passport/users/getLoggedInUser'  # noqa
 
     def complete_login(self, request, app, token, **kwargs):
-        resp = requests.get(self.profile_url,
+        resp = safe_requests.get(self.profile_url,
                             params={'access_token': token.token})
         extra_data = resp.json()
         return self.get_provider().sociallogin_from_response(request,

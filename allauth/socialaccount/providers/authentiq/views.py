@@ -1,4 +1,3 @@
-import requests
 
 from allauth.compat import urljoin
 from allauth.socialaccount import app_settings
@@ -9,6 +8,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import AuthentiqProvider
+from security import safe_requests
 
 
 class AuthentiqOAuth2Adapter(OAuth2Adapter):
@@ -27,7 +27,7 @@ class AuthentiqOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         auth = {'Authorization': 'Bearer ' + token.token}
-        resp = requests.get(self.profile_url, headers=auth)
+        resp = safe_requests.get(self.profile_url, headers=auth)
         resp.raise_for_status()
         extra_data = resp.json()
         login = self.get_provider() \

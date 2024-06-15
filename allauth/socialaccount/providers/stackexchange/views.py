@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import StackExchangeProvider
+from security import safe_requests
 
 
 class StackExchangeOAuth2Adapter(OAuth2Adapter):
@@ -18,7 +18,7 @@ class StackExchangeOAuth2Adapter(OAuth2Adapter):
     def complete_login(self, request, app, token, **kwargs):
         provider = self.get_provider()
         site = provider.get_site()
-        resp = requests.get(self.profile_url,
+        resp = safe_requests.get(self.profile_url,
                             params={'access_token': token.token,
                                     'key': app.key,
                                     'site': site})

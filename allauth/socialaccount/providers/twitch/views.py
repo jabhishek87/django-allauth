@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import TwitchProvider
+from security import safe_requests
 
 
 class TwitchOAuth2Adapter(OAuth2Adapter):
@@ -18,7 +18,7 @@ class TwitchOAuth2Adapter(OAuth2Adapter):
 
     def complete_login(self, request, app, token, **kwargs):
         params = {"oauth_token": token.token, "client_id": app.client_id}
-        response = requests.get(self.profile_url, params=params)
+        response = safe_requests.get(self.profile_url, params=params)
 
         data = response.json()
         if response.status_code >= 400:

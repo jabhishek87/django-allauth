@@ -1,4 +1,3 @@
-import requests
 from hashlib import md5
 
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import OdnoklassnikiProvider
+from security import safe_requests
 
 
 USER_FIELDS = ['uid',
@@ -53,7 +53,7 @@ class OdnoklassnikiOAuth2Adapter(OAuth2Adapter):
         data['sig'] = md5(
             (''.join(check_list) + suffix).encode('utf-8')).hexdigest()
 
-        response = requests.get(self.profile_url, params=data)
+        response = safe_requests.get(self.profile_url, params=data)
         extra_data = response.json()
         return self.get_provider().sociallogin_from_response(request,
                                                              extra_data)

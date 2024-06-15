@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import OrcidProvider
+from security import safe_requests
 
 
 class OrcidOAuth2Adapter(OAuth2Adapter):
@@ -34,7 +34,7 @@ class OrcidOAuth2Adapter(OAuth2Adapter):
         if self.member_api:
             params['access_token'] = token.token
 
-        resp = requests.get(self.profile_url % kwargs['response']['orcid'],
+        resp = safe_requests.get(self.profile_url % kwargs['response']['orcid'],
                             params=params,
                             headers={'accept': 'application/orcid+json'})
         extra_data = resp.json()

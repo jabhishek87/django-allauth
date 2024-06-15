@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import RedditProvider
+from security import safe_requests
 
 
 class RedditAdapter(OAuth2Adapter):
@@ -26,7 +26,7 @@ class RedditAdapter(OAuth2Adapter):
         headers = {
             "Authorization": "bearer " + token.token}
         headers.update(self.headers)
-        extra_data = requests.get(self.profile_url, headers=headers)
+        extra_data = safe_requests.get(self.profile_url, headers=headers)
 
         # This only here because of weird response from the test suite
         if isinstance(extra_data, list):

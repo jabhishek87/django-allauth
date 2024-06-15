@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import SpotifyOAuth2Provider
+from security import safe_requests
 
 
 class SpotifyOAuth2Adapter(OAuth2Adapter):
@@ -16,7 +16,7 @@ class SpotifyOAuth2Adapter(OAuth2Adapter):
     profile_url = 'https://api.spotify.com/v1/me'
 
     def complete_login(self, request, app, token, **kwargs):
-        extra_data = requests.get(self.profile_url, params={
+        extra_data = safe_requests.get(self.profile_url, params={
             'access_token': token.token
         })
 

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import requests
 
 from allauth.socialaccount import app_settings
 from allauth.socialaccount.providers.gitlab.provider import GitLabProvider
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
     OAuth2CallbackView,
     OAuth2LoginView,
 )
+from security import safe_requests
 
 
 class GitLabOAuth2Adapter(OAuth2Adapter):
@@ -25,7 +25,7 @@ class GitLabOAuth2Adapter(OAuth2Adapter):
     )
 
     def complete_login(self, request, app, token, response):
-        extra_data = requests.get(self.profile_url, params={
+        extra_data = safe_requests.get(self.profile_url, params={
             'access_token': token.token
         })
 

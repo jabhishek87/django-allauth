@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.client import OAuth2Error
 from allauth.socialaccount.providers.oauth2.views import (
@@ -8,6 +7,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import SlackProvider
+from security import safe_requests
 
 
 class SlackOAuth2Adapter(OAuth2Adapter):
@@ -24,8 +24,7 @@ class SlackOAuth2Adapter(OAuth2Adapter):
 
     def get_data(self, token):
         # Verify the user first
-        resp = requests.get(
-            self.identity_url,
+        resp = safe_requests.get(self.identity_url,
             params={'token': token}
         )
         resp = resp.json()

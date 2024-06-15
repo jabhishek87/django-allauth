@@ -1,4 +1,3 @@
-import requests
 
 from allauth.socialaccount.providers.oauth2.views import (
     OAuth2Adapter,
@@ -7,6 +6,7 @@ from allauth.socialaccount.providers.oauth2.views import (
 )
 
 from .provider import FoursquareProvider
+from security import safe_requests
 
 
 class FoursquareOAuth2Adapter(OAuth2Adapter):
@@ -21,8 +21,7 @@ class FoursquareOAuth2Adapter(OAuth2Adapter):
         # Foursquare needs a version number for their API requests as
         # documented here
         # https://developer.foursquare.com/overview/versioning
-        resp = requests.get(
-            self.profile_url,
+        resp = safe_requests.get(self.profile_url,
             params={'oauth_token': token.token, 'v': '20140116'})
         extra_data = resp.json()['response']['user']
         return self.get_provider().sociallogin_from_response(request,
