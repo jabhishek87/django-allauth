@@ -1,5 +1,4 @@
 import json
-import random
 import warnings
 
 from django.conf import settings
@@ -20,6 +19,7 @@ from ..utils import get_user_model
 from .helpers import complete_social_login
 from .models import SocialAccount, SocialApp, SocialLogin
 from .views import signup
+import secrets
 
 
 class OAuthTestsMixin(object):
@@ -51,7 +51,7 @@ class OAuthTestsMixin(object):
         resp = self.client.get(reverse('socialaccount_signup'))
         sociallogin = resp.context['form'].sociallogin
         data = dict(email=user_email(sociallogin.user),
-                    username=str(random.randrange(1000, 10000000)))
+                    username=str(secrets.SystemRandom().randrange(1000, 10000000)))
         resp = self.client.post(reverse('socialaccount_signup'),
                                 data=data)
         self.assertRedirects(

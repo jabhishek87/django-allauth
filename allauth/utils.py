@@ -1,7 +1,6 @@
 import base64
 import importlib
 import json
-import random
 import re
 import string
 import unicodedata
@@ -22,6 +21,7 @@ from django.db.models.fields import (
 )
 from django.utils import dateparse, six
 from django.utils.six.moves.urllib.parse import urlsplit
+import secrets
 
 
 try:
@@ -79,7 +79,7 @@ def get_username_max_length():
 def generate_username_candidate(basename, suffix_length):
     max_length = get_username_max_length()
     suffix = ''.join(
-        random.choice(USERNAME_SUFFIX_CHARS[i])
+        secrets.choice(USERNAME_SUFFIX_CHARS[i])
         for i in range(suffix_length))
     return basename[0:max_length - len(suffix)] + suffix
 
